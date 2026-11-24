@@ -1,2 +1,2 @@
-# python_simpleatm
-Aplikasi ATM Sederhana sebagai bahan review dan asah logika dengan python
+# python_simple
+Aplikasi dengan code sederhana sebagai bahan review dan asah logika python untuk penyesuaian kembali.
