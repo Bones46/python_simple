@@ -1,0 +1,71 @@
+"""Aplikasi ATM sederhana dengan pecahan Rp50.000 dan Rp100.000."""
+
+
+SALDO_AWAL = 1_000_000
+PECAHAN = 50_000
+
+
+def format_rupiah(jumlah):
+    """Mengubah angka menjadi format rupiah yang mudah dibaca."""
+    return f"Rp{jumlah:,.0f}".replace(",", ".")
+
+
+def tarik_tunai(saldo):
+    """Memproses penarikan dan mengembalikan saldo terbaru."""
+    masukan = input("Masukkan jumlah penarikan: Rp")
+
+    try:
+        jumlah = int(masukan.replace(".", "").replace(",", ""))
+    except ValueError:
+        print("Jumlah harus berupa angka bulat. Contoh: 150000")
+        return saldo
+
+    if jumlah <= 0:
+        print("Jumlah penarikan harus lebih dari Rp0.")
+        return saldo
+    if jumlah % PECAHAN != 0:
+        print("Penarikan harus kelipatan Rp50.000 (pecahan Rp50.000 atau Rp100.000).")
+        return saldo
+    if jumlah > saldo:
+        print(f"Saldo tidak cukup. Saldo Anda {format_rupiah(saldo)}.")
+        return saldo
+
+    # Keluarkan pecahan Rp100.000 sebanyak mungkin, lalu pecahan Rp50.000.
+    lembar_100 = jumlah // 100_000
+    lembar_50 = (jumlah % 100_000) // 50_000
+    saldo -= jumlah
+
+    print("\nPenarikan berhasil.")
+    print(f"Uang yang diterima: {format_rupiah(jumlah)}")
+    print(f"  Pecahan Rp100.000: {lembar_100} lembar")
+    print(f"  Pecahan Rp50.000 : {lembar_50} lembar")
+    print(f"Sisa saldo: {format_rupiah(saldo)}\n")
+    return saldo
+
+
+def main():
+    saldo = SALDO_AWAL
+    print("=" * 36)
+    print("       SELAMAT DATANG DI ATM")
+    print("=" * 36)
+
+    while True:
+        print("\nMenu:")
+        print("1. Cek saldo")
+        print("2. Tarik tunai")
+        print("3. Keluar")
+        pilihan = input("Pilih menu (1-3): ").strip()
+
+        if pilihan == "1":
+            print(f"Saldo Anda: {format_rupiah(saldo)}")
+        elif pilihan == "2":
+            saldo = tarik_tunai(saldo)
+        elif pilihan == "3":
+            print("Terima kasih telah menggunakan ATM.")
+            break
+        else:
+            print("Pilihan tidak valid. Silakan pilih 1, 2, atau 3.")
+
+
+if __name__ == "__main__":
+    main()
