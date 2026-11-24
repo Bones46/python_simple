@@ -1,0 +1,45 @@
+"""Ping sepuluh alamat IP dan tampilkan statusnya sebagai UP atau DOWN."""
+
+import platform
+import subprocess
+
+
+# Ganti alamat di bawah ini dengan IP yang ingin dipantau.
+DAFTAR_IP = [
+    f"10.157.83.{nomor}" for nomor in range(40, 51)
+]
+
+
+def ping(ip):
+    """Mengirim satu paket ping. Mengembalikan True jika host merespons."""
+    if platform.system().lower() == "windows":
+        perintah = ["ping", "-n", "1", "-w", "1000", ip]
+    else:
+        # -W menggunakan timeout dalam detik pada Linux dan macOS.
+        perintah = ["ping", "-c", "1", "-W", "1", ip]
+
+    try:
+        hasil = subprocess.run(
+            perintah,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=3,
+            check=False,
+        )
+        return hasil.returncode == 0
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return False
+
+
+def main():
+    print("Memeriksa 10 alamat IP...\n")
+    print(f"{'NO.':<5}{'ALAMAT IP':<20}STATUS")
+    print("-" * 37)
+
+    for nomor, ip in enumerate(DAFTAR_IP, start=1):
+        status = "UP" if ping(ip) else "DOWN"
+        print(f"{nomor:<5}{ip:<20}{status}")
+
+
+if __name__ == "__main__":
+    main()
